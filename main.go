@@ -1,12 +1,14 @@
 package main
 
 import (
+	"GoFiberAPI/integrations"
 	"context"
 	"fmt"
 	"log"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -46,9 +48,35 @@ func ConnectDB() *mongo.Client {
 	return client
 }
 
+func init() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Cannot load environment file")
+	}
+	integrations.SetEnvironmentVariables()
+}
+
 func main() {
+	fmt.Println("Starting application")
+
 	// Initialize the Fiber app
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		AppName: "NoscopApp",
+		BodyLimit: 4000 * 1024,
+	})
+	
+	// Connect To Database
+	dbConfig.ConnectToMongoDB()
+
+	//Remove Pre-Generated Outs
+	dbConfig.RemoveGeneratedOuts()
+
+	// Define the API routes
+	apiHandlers.Router(app)
+
+	// Start the server
+	log.Fatal(app.Listen(":8888"))
+	
 
 	// Connect to MongoDB and select the collection
 	client := ConnectDB()
