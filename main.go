@@ -1,6 +1,8 @@
 package main
 
 import (
+	"GoFiberAPI/apiHandlers"
+	"GoFiberAPI/dbConfig"
 	"GoFiberAPI/integrations"
 	"context"
 	"fmt"
@@ -64,7 +66,7 @@ func main() {
 		AppName: "NoscopApp",
 		BodyLimit: 4000 * 1024,
 	})
-	
+
 	// Connect To Database
 	dbConfig.ConnectToMongoDB()
 
