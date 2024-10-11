@@ -1,4 +1,4 @@
-module go-fiber-api
+module GoFiberAPI
 
 go 1.23.0
 
