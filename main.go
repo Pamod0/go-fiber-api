@@ -63,12 +63,12 @@ func main() {
 
 	// Initialize the Fiber app
 	app := fiber.New(fiber.Config{
-		AppName: "NoscopApp",
+		AppName: "GoFiberAPI",
 		BodyLimit: 4000 * 1024,
 	})
 
 	// Connect To Database
-	dbConfig.ConnectToMongoDB()
+	dbConfig.ConnectMongoDB()
 
 	//Remove Pre-Generated Outs
 	dbConfig.RemoveGeneratedOuts()
