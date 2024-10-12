@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func UniqueCheck(obj interface{}, collectionName string, fields[]string) error {
+func UniqueCheck(obj interface{}, collectionName string, fields []string) error {
 	result := make(map[string]interface{})
 
 	val := reflect.ValueOf(obj)
@@ -32,11 +32,11 @@ func UniqueCheck(obj interface{}, collectionName string, fields[]string) error {
 	for _, field := range fields {
 		filter["$or"] = append(filter["$or"].([]bson.M), bson.M{strings.ToLower(field): result[field]})
 	}
-	err := dbConfig.DATABASE.Collection(collectionName).FindOne(context.Background(),filter).Decode(&model)
+	err := dbConfig.DATABASE.Collection(collectionName).FindOne(context.Background(), filter).Decode(&model)
 
 	if err != nil {
 		return nil
-	}else {
-		return errors.New(fmt.Sprintf("%v unique" , fields))
+	} else {
+		return errors.New(fmt.Sprintf("%v unique", fields))
 	}
 }

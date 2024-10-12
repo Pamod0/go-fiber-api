@@ -1,7 +1,6 @@
 package integrations
 
-import (
-)
+import ()
 
 func SetEnvironmentVariables() {
 }

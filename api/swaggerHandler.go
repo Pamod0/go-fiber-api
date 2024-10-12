@@ -12,6 +12,5 @@ func SwaggerHandler(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).SendString("Failed to load Swagger JSON file")
 	}
 
-
 	return c.Status(fiber.StatusOK).Send(swaggerJSON)
 }
