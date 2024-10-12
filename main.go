@@ -1,6 +1,7 @@
 package main
 
 import (
+	"GoFiberAPI/dto"
 	"context"
 	"fmt"
 	"log"
@@ -8,17 +9,17 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // User struct to represent the MongoDB document
-type User struct {
-	ID   primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
-	Name string             `json:"name"`
-	Age  int                `json:"age"`
-}
+// type User struct {
+// 	ID   primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+// 	Name string             `json:"name"`
+// 	Age  int                `json:"age"`
+// }
 
 // MongoDB collection
 var userCollection *mongo.Collection
@@ -26,8 +27,8 @@ var userCollection *mongo.Collection
 // Connect to MongoDB
 func ConnectDB() *mongo.Client {
 	// Replace with your MongoDB connection URI
-	uri := "mongodb://localhost:27017" // For local MongoDB
-	// uri := "mongodb+srv://<username>:<password>@cluster.mongodb.net/test" // For MongoDB Atlas
+	// uri := "mongodb://localhost:27017" // For local MongoDB
+	uri := "mongodb+srv://pamod:29StecdLbCivz7nR@pamod.inscxbr.mongodb.net/?retryWrites=true&w=majority&appName=Pamod" // For MongoDB Atlas
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
@@ -52,11 +53,11 @@ func main() {
 
 	// Connect to MongoDB and select the collection
 	client := ConnectDB()
-	userCollection = client.Database("testdb").Collection("users")
+	userCollection = client.Database("gofiberapi").Collection("users")
 
 	// Route to get all users
 	app.Get("/users", func(c *fiber.Ctx) error {
-		var users []User
+		var users []dto.User
 		cursor, err := userCollection.Find(context.Background(), bson.D{})
 		if err != nil {
 			return c.Status(500).SendString(err.Error())
@@ -77,7 +78,7 @@ func main() {
 			return c.Status(400).SendString("Invalid user ID")
 		}
 
-		var user User
+		var user dto.User
 		err = userCollection.FindOne(context.Background(), bson.M{"_id": objID}).Decode(&user)
 		if err != nil {
 			return c.Status(404).SendString("User not found")
@@ -88,7 +89,7 @@ func main() {
 
 	// Route to create a new user
 	app.Post("/users", func(c *fiber.Ctx) error {
-		var newUser User
+		var newUser dto.User
 
 		// Parse the request body into the newUser struct
 		if err := c.BodyParser(&newUser); err != nil {
