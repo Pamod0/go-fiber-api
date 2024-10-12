@@ -50,6 +50,13 @@ func ConnectDB() *mongo.Client {
 	return client
 }
 
+
+
+
+
+
+
+
 func init() {
 	err := godotenv.Load(".env")
 	if err != nil {
@@ -78,6 +85,11 @@ func main() {
 
 	// Start the server
 	log.Fatal(app.Listen(":8888"))
+
+
+
+
+	
 	
 
 	// Connect to MongoDB and select the collection

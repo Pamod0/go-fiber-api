@@ -1,15 +1,19 @@
 package api
 
 import (
-	"context"
 	"GoFiberAPI/dto"
+	"context"
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// MongoDB collection
+var userCollection *mongo.Collection
+
 func CreateUserApi(c *fiber.Ctx) error {
-	var newUser User
+	newUser := dto.User{}
 
 	// Parse the request body into the newUser struct
 	if err := c.BodyParser(&newUser); err != nil {

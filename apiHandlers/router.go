@@ -36,6 +36,7 @@ func Router(app *fiber.App) {
 
 func RouteMappings(cg fiber.Router) {
 
+cg.Post("/createUser", api.CreateUserApi)
 cg.Get("/swagger", api.SwaggerHandler)
 
 }
