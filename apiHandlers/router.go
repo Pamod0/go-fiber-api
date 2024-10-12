@@ -15,7 +15,7 @@ func Router(app *fiber.App) {
 	app.Use(logger.New())
 	app.Use(recover.New())
 
-	group := app.Group("/NoscopApp/api")
+	group := app.Group("/GoFiber/api")
 	defaultGroup := app.Group("/")
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "*",

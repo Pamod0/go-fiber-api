@@ -8,7 +8,7 @@ import (
 
 func DB_CreatePreparedness(object *dto.User) error {
 
-	_, err := dbConfig.DATABASE.Collection("Preparednesss").InsertOne(context.Background(), object)
+	_, err := dbConfig.DATABASE.Collection("User").InsertOne(context.Background(), object)
 	if err != nil {
 		return err
 	}
