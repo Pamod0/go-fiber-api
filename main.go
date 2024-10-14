@@ -6,9 +6,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// MongoDB collection
-// var userCollection *mongo.Collection
-
 func main() {
 	// Initialize the Fiber app
 	app := fiber.New()
