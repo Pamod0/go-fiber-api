@@ -71,7 +71,7 @@ func main() {
 	dbConfig.ConnectMongoDB()
 
 	//Remove Pre-Generated Outs
-	dbConfig.RemoveGeneratedOuts()
+	// dbConfig.RemoveGeneratedOuts()
 
 	// Define the API routes
 	apiHandlers.Router(app)
