@@ -43,6 +43,6 @@ func RouteMappings(cg fiber.Router) {
 
 func DefaultMappings(cg fiber.Router) {
 	cg.Get("/", func(c *fiber.Ctx) error {
-		return c.JSON(map[string]string{"message": "NoscopApp-APP607 service is up and running", "version": "1.0"})
+		return c.JSON(map[string]string{"message": "GO Fiber API service is up and running", "version": "1.0"})
 	})
 }
