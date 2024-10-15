@@ -3,12 +3,15 @@ module GoFiberAPI
 go 1.23.0
 
 require (
+	github.com/coreos/go-oidc/v3 v3.11.0
 	github.com/gofiber/fiber/v2 v2.52.5
 	go.mongodb.org/mongo-driver v1.17.1
+	golang.org/x/oauth2 v0.23.0
 )
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
+	github.com/go-jose/go-jose/v4 v4.0.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect

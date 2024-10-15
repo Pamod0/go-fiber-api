@@ -1,7 +1,7 @@
 package apihandlers
 
 import (
-	"GoFiberAPI/dbconfig"
+	"GoFiberAPI/dbConfig"
 	"GoFiberAPI/dto"
 	"context"
 
@@ -16,7 +16,7 @@ var userCollection *mongo.Collection
 func Router(app *fiber.App) {
 
 	// Connect to MongoDB and select the collection
-	client := dbconfig.ConnectToMongoDB()
+	client := dbConfig.ConnectToMongoDB()
 	userCollection = client.Database("testdb").Collection("users")
 
 	// Routes
