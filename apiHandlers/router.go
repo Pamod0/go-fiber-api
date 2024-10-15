@@ -1,8 +1,11 @@
-package apihandlers
+package apiHandlers
 
 import (
 	"GoFiberAPI/dbConfig"
 	"GoFiberAPI/dto"
+	"GoFiberAPI/platform/authenticator"
+	"GoFiberAPI/web/app/login"
+	"GoFiberAPI/web/app/callback"
 	"context"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,7 +16,7 @@ import (
 
 var userCollection *mongo.Collection
 
-func Router(app *fiber.App) {
+func Router(app *fiber.App, auth *authenticator.Authenticator) {
 
 	// Connect to MongoDB and select the collection
 	client := dbConfig.ConnectToMongoDB()
@@ -27,6 +30,10 @@ func Router(app *fiber.App) {
 	app.Get("/health", func(c *fiber.Ctx) error {
 		return c.SendString("Health endpoint is working!")
 	})
+
+	app.Get("/login", login.Handler(auth))
+
+	app.Get("/callback", callback.Handler(auth))
 
 	// Route to get all users
 	app.Get("/users", func(c *fiber.Ctx) error {
