@@ -2,84 +2,53 @@ package callback
 
 import (
 	"GoFiberAPI/platform/authenticator"
-	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/gofiber/session/v2"
 )
 
+// Define a session store for Fiber
 var store = session.New()
 
-// type Authenticator struct {
-//     // Add necessary fields and methods
-// }
-
-// func (auth *Authenticator) Exchange(ctx context.Context, code string) (*Token, error) {
-//     // Implement this method to exchange the authorization code for a token
-//     return &Token{}, nil
-// }
-
-// func (auth *Authenticator) VerifyIDToken(ctx context.Context, token *Token) (*IDToken, error) {
-//     // Implement this method to verify the ID token
-//     return &IDToken{}, nil
-// }
-
-// type Token struct {
-//     AccessToken string
-// }
-
-// type IDToken struct {
-//     // Add necessary fields and methods
-// }
-
-// func (idToken *IDToken) Claims(v interface{}) error {
-//     // Implement this method to extract claims from the ID token
-//     return nil
-// }
-
+// Handler for the callback.
 func Handler(auth *authenticator.Authenticator) fiber.Handler {
-    return func(ctx *fiber.Ctx) error {
-        sess, err := store.Get(ctx)
-        if err != nil {
-            return ctx.Status(http.StatusInternalServerError).SendString(err.Error())
-        }
+	return func(ctx *fiber.Ctx) error {
+		// Get the session
+		sess := store.Get(ctx)
 
-        if ctx.Query("state") != sess.Get("state") {
-            return ctx.Status(http.StatusBadRequest).SendString("Invalid state parameter.")
-        }
+		// State validation to prevent CSRF attacks
+		if ctx.Query("state") != sess.Get("state") {
+			return ctx.Status(fiber.StatusBadRequest).SendString("Invalid state parameter.")
+		}
 
-        // Exchange an authorization code for a token.
-        token, err := auth.Exchange(ctx.Context(), ctx.Query("code"))
-        if err != nil {
-            return ctx.Status(http.StatusUnauthorized).SendString("Failed to convert an authorization code into a token.")
-        }
+		// Exchange the authorization code for a token
+		token, err := auth.Exchange(ctx.Context(), ctx.Query("code"))
+		if err != nil {
+			return ctx.Status(fiber.StatusUnauthorized).SendString("Failed to exchange authorization code for a token.")
+		}
 
-        idToken, err := auth.VerifyIDToken(ctx.Context(), token)
-        if err != nil {
-            return ctx.Status(http.StatusInternalServerError).SendString("Failed to verify ID Token.")
-        }
+		// Verify the ID token
+		idToken, err := auth.VerifyIDToken(ctx.Context(), token)
+		if err != nil {
+			return ctx.Status(fiber.StatusInternalServerError).SendString("Failed to verify ID Token.")
+		}
 
-        var profile map[string]interface{}
-        if err := idToken.Claims(&profile); err != nil {
-            return ctx.Status(http.StatusInternalServerError).SendString(err.Error())
-        }
+		// Extract user profile from the ID token
+		var profile map[string]interface{}
+		if err := idToken.Claims(&profile); err != nil {
+			return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		}
 
-        sess.Set("access_token", token.AccessToken)
-        sess.Set("profile", profile)
-        if err := sess.Save(); err != nil {
-            return ctx.Status(http.StatusInternalServerError).SendString(err.Error())
-        }
+		// Store the access token and profile in the session
+		sess.Set("access_token", token.AccessToken)
+		sess.Set("profile", profile)
 
-        // Redirect to logged in page.
-        return ctx.Redirect("/user", http.StatusTemporaryRedirect)
-    }
+		// Save session
+		if err := sess.Save(); err != nil {
+			return ctx.Status(fiber.StatusInternalServerError).SendString("Failed to save session.")
+		}
+
+		// Redirect to the logged-in page
+		return ctx.Redirect("/health", fiber.StatusTemporaryRedirect)
+	}
 }
-
-// func main() {
-//     app := fiber.New()
-
-//     auth := &Authenticator{}
-//     app.Get("/callback", Handler(auth))
-
-//     app.Listen(":3000")
-// }
