@@ -12,6 +12,9 @@ func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api", middleware.AuthReq())
 
 	// routes
+	api.Get("/hello", func(c *fiber.Ctx) error {
+		return c.SendString("Hello, World!")
+	})
 	api.Get("/", handler.GetAllProducts)
 	api.Get("/:id", handler.GetSingleProduct)
 	api.Post("/", handler.CreateProduct)
