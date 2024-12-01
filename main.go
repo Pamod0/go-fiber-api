@@ -1,19 +1,27 @@
 package main
 
 import (
+	"log"
+
+	"github.com/Pamod0/go-fiber-api/database"
+	"github.com/Pamod0/go-fiber-api/router"
+	"github.com/gofiber/fiber/middleware"
 	"github.com/gofiber/fiber/v2"
 )
 
-func main() {
-	app := fiber.New()
-	
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
+func main() { // entry point to our program
 
-	app.Use(func(c *fiber.Ctx) {
-		c.SendStatus(404) // => 404 "Not Found"
-	})
+	// Connect to database
+if err := database.Connect(); err != nil {
+	log.Fatal(err)
+}
 
-	app.Listen(":3000")
+app := fiber.New()  // call the New() method - used to instantiate a new Fiber App
+
+app.Use(middleware.Logger())
+
+router.SetupRoutes(app)
+
+app.Listen(":3000") // listen/Serve the new Fiber app on port 3000
+
 }
