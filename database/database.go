@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
+	_ "github.com/lib/pq"
+
 	"github.com/Pamod0/go-fiber-api/config"
 )
 

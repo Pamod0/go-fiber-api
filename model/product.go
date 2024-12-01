@@ -8,7 +8,6 @@ type Product struct {
 	Amount      int    `json: "amount"`
 }
 
-
 // Products struct
 type Products struct {
 	Products []Product `json: "products"`

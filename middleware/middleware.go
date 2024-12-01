@@ -11,11 +11,11 @@ func AuthReq() func(*fiber.Ctx) error {
 
 	cfg := basicauth.Config{
 		Users: map[string]string{
-		  config.Config("USERNAME"): config.Config("PASSWORD"),
+			config.Config("USERNAME"): config.Config("PASSWORD"),
 		},
-	  }
+	}
 
-	err := basicauth.New(cfg);
+	err := basicauth.New(cfg)
 
 	return err
 
